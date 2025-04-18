@@ -15,6 +15,17 @@ router.get('/', async (_req, res) => {
     }
 });
 
+router.get('/search', authMiddleware, async (req, res) => {
+    const { q } = req.query;
+    try {
+        const [result] = await TalkerBD.searchByQ(q);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: 'Ninguem encontrado' })
+    }
+});
+
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {

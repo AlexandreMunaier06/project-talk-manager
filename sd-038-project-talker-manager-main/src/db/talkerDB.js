@@ -25,10 +25,16 @@ const remove = (id) => conn.execute(
     [id],
 );
 
+const searchByQ = (q) => conn.execute(
+    `SELECT * FROM talkers WHERE name LIKE ?`,
+    [`%${q}%`],
+);
+
 module.exports = {
     findAll,
     findById,
     insert,
     update,
-    remove
+    remove,
+    searchByQ
 }
