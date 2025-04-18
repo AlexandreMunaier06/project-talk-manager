@@ -1,4 +1,3 @@
-const { convertToISODate } = require('../utils/validDate');
 const conn = require('./connection');
 
 const findAll = () => conn.execute(`SELECT * FROM talkers`);
@@ -14,8 +13,22 @@ const insert = ( talk ) => conn.execute(
     [talk.name, talk.age, talk.watchedAt, talk.rate],
 );
 
+const update = (id, talk) => conn.execute(
+    `UPDATE talkers SET
+    name = ?, age = ?, watched_at = STR_TO_DATE(?, '%d/%m/%Y'), rate = ?
+    WHERE id = ?`,
+    [talk.name, talk.age, talk.watchedAt, talk.rate, id],
+);
+
+const remove = (id) => conn.execute(
+    `DELETE FROM talkers WHERE id = ?`,
+    [id],
+);
+
 module.exports = {
     findAll,
     findById,
-    insert
+    insert,
+    update,
+    remove
 }

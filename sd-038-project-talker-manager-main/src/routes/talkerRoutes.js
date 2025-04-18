@@ -19,7 +19,9 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const [result] = await TalkerBD.findById(id);
-        if (result > 0) {
+        console.log(result);
+        
+        if (result.length > 0) {
             res.status(200).json(result);
         } else {
             res.status(404).json({message: "Pessoa palestrante não encontrada"});
@@ -39,6 +41,29 @@ router.post('/', authMiddleware, infoMiddleware, async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error });
+    }
+});
+
+router.put('/:id', authMiddleware, infoMiddleware, async (req, res) => {
+    const { id } = req.params;
+    const talk = req.body;
+    try {
+        const [result] = await TalkerBD.update(id, talk);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({ message: 'Pessoa palestrante nao encontrada' });
+    }
+});
+
+router.delete('/:id', authMiddleware, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await TalkerBD.remove(id);
+        res.status(204).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: 'Erro ao remover usuario' });
     }
 });
 
