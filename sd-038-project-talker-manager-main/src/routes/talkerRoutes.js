@@ -1,5 +1,7 @@
 const express = require('express');
 const TalkerBD = require('../db/talkerDB');
+const authMiddleware = require('../middleware/authMiddleware');
+const infoMiddleware = require('../middleware/infoMiddleware');
 
 const router = express.Router();
 
@@ -25,6 +27,18 @@ router.get('/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({message: sqlMessage});
+    }
+});
+
+router.post('/', authMiddleware, infoMiddleware, async (req, res) => {
+    const talk = req.body;
+    try {
+        const [result] = await TalkerBD.insert(talk);
+        console.log(talk);
+        res.status(201).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error });
     }
 });
 
